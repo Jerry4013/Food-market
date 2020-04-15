@@ -1,6 +1,5 @@
 package soen487.foodmarket.dataobject;
 
-
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -8,37 +7,28 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Data
-public class ProductInfo {
+public class OrderItem {
 
     @Id
-    @Column(length = 32, nullable = false, unique = true)
+    @Column(length = 32, nullable = false)
+    private String itemId;
+
+    @Column(length = 32, nullable = false)
+    private String orderId;
+
+    @Column(length = 32, nullable = false)
     private String productId;
 
-    @Column(length = 50, nullable = false)
-    private String productName;
-
-    @Column(nullable= false, columnDefinition = "DECIMAL(8,2)")
-    private BigDecimal productPrice;
-
     @Column(nullable = false)
-    private Integer productStock;
+    private Integer quantity;
 
-    private String productDescription;
-
-    private String productImage;
-
-    @Column(nullable = false)
-    private Integer categoryType;
-
-    @Column(nullable = false)
-    private Integer productOwnerId;
+    private String unit;
 
     @Column(columnDefinition="TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP")
     private Date createTime;
