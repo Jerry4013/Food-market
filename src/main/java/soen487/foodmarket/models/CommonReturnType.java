@@ -1,4 +1,4 @@
-package soen487.foodmarket.model;
+package soen487.foodmarket.models;
 
 public class CommonReturnType {
 

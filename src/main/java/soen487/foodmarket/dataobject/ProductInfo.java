@@ -34,8 +34,11 @@ public class ProductInfo {
 
     private String productImage;
 
+    @Column(nullable= false, columnDefinition = "tinyint default 0")
+    private Integer productStatus; // 0: 在售；1：下架
+
     @Column(nullable = false)
-    private Integer categoryType;
+    private Integer category;
 
     @Column(nullable = false)
     private Integer productOwnerId;

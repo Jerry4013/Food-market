@@ -10,7 +10,7 @@ import javax.persistence.*;
 @DynamicInsert
 @DynamicUpdate
 @Data
-public class CategoryType {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

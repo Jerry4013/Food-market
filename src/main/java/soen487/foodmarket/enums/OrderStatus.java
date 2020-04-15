@@ -1,6 +1,6 @@
 package soen487.foodmarket.enums;
 
-public enum OrderStatusEnum {
+public enum OrderStatus {
     NEW(0, "新订单"),
     FINISH(1, "完结"),
     CANCEL(2, "已取消"),
@@ -10,7 +10,7 @@ public enum OrderStatusEnum {
 
     private String massage;
 
-    OrderStatusEnum(Integer code, String massage) {
+    OrderStatus(Integer code, String massage) {
         this.code = code;
         this.massage = massage;
     }

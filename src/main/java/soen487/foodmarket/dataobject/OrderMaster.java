@@ -3,8 +3,6 @@ package soen487.foodmarket.dataobject;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import soen487.foodmarket.enums.OrderStatusEnum;
-import soen487.foodmarket.enums.PayStatusEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
