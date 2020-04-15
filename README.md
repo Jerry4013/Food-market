@@ -137,11 +137,11 @@ POST: /dish/new
 {
   {
       "username": "youareremovedfromthegroup"
-      "dishname": "煎饼果子"
-      "category": "appitizer"
+      "productName": "煎饼果子"
+      "categoryType": "appitizer"
       "price" : 5.98
-      "picurl": "http://baidu.com/jianbingguozi/1.png"
-      "description" : "巨大的煎饼果子,保证你吃饱!"
+      "productImage": "http://baidu.com/jianbingguozi/1.png"
+      "productDescription" : "巨大的煎饼果子,保证你吃饱!"
   }
 }
 
