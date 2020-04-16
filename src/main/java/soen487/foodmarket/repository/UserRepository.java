@@ -5,4 +5,6 @@ import soen487.foodmarket.dataobject.UserInfo;
 
 public interface UserRepository extends JpaRepository<UserInfo, Integer> {
 
+    UserInfo findByUsername(String username);
+
 }

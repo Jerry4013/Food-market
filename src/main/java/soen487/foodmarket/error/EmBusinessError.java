@@ -15,6 +15,9 @@ public enum EmBusinessError implements CommonError {
     USER_NOT_EXIST(20001,"User does not exist."),
     USER_LOGIN_FAIL(20002,"Telephone number or password incorrect."),
     USER_NOT_LOGIN(20003,"User is not login"),
+    USER_NAME_EXISTS(20004, "username already exists."),
+    PASSWORD_INCORRECT(20005, "Password incorrect."),
+    USER_INFO_INCORRECT(20006, "You cannot change username or password here."),
 
     //30000, transaction error
     BOOK_NOT_EXIST(30001, "This book does not exist."),
