@@ -165,11 +165,9 @@ PUT: /dish/management
 * 删除商品
 ```
 DELETE: /dish/management
-{
-  {
-       "productId" : 1
-  }
-}
+param
+ "productId" : 1
+
 
 {
     "status": "success",
@@ -183,12 +181,7 @@ DELETE: /dish/management
 ```
 * 本人全部商品
 ```
-GET: /dish
-{
-  {
-      "productOwnerId": "youareremovedfromthegroup"
-  }
-}
+GET: /dish?id=youareremovedfromthegroup
 
 
 {
@@ -310,14 +303,12 @@ POST: transaction/
 ```
 
 * 接单 / 完成
-```
-POST: orderStatus/
-PUT: orderStatus/
-{
-    "orderId" : 1,
-    "orderStatus" : "processing" / "complete"
 
-}
+((感觉这个有问题))
+```
+GET: /orderStatus?orderId=1&orderStatus=processing
+GET: /orderStatus?orderId=1&orderStatus=complete
+
 
 {
     "status" : "success",
