@@ -13,11 +13,11 @@ public class ChangePassword {
     private String username;
 
     @NotNull(message = "Password cannot be empty")
-    @Size(min=6, max=50, message = "The length of username must be 6-50")
+    @Size(min=6, max=50, message = "The length of password must be 6-50")
     private String password;
 
     @NotNull(message = "Password cannot be empty")
-    @Size(min=6, max=50, message = "The length of username must be 6-50")
+    @Size(min=6, max=50, message = "The length of password must be 6-50")
     private String newPassword;
 
 }

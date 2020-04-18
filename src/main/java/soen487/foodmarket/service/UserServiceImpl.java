@@ -41,6 +41,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel login(String username, String password) {
+        UserInfo userInfo = findUsernameAndCheckPassword(username, password);
+        UserModel userModel = new UserModel();
+        BeanUtils.copyProperties(userInfo, userModel);
+        return userModel;
+    }
+
+    private UserInfo findUsernameAndCheckPassword(String username, String password) {
         UserInfo userInfo = userRepository.findByUsername(username);
         if (userInfo == null) {
             log.error("[login] User does not exist. username={}", username);
@@ -50,18 +57,17 @@ public class UserServiceImpl implements UserService {
             log.error("[login] password incorrect. password={}", password);
             throw new BusinessException(EmBusinessError.PASSWORD_INCORRECT);
         }
-        UserModel userModel = new UserModel();
-        BeanUtils.copyProperties(userInfo, userModel);
-        return userModel;
+        return userInfo;
     }
 
     @Override
     public UserModel changePassword(ChangePassword changePassword) {
-        UserModel userModel = login(changePassword.getUsername(), changePassword.getPassword());
-        userModel.setPassword(changePassword.getNewPassword());
-        UserInfo userInfo = new UserInfo();
-        BeanUtils.copyProperties(userModel, userInfo);
-        userRepository.save(userInfo);
+        UserInfo userInfo = findUsernameAndCheckPassword(changePassword.getUsername(),
+                changePassword.getPassword());
+        userInfo.setPassword(changePassword.getNewPassword());
+        UserInfo save = userRepository.save(userInfo);
+        UserModel userModel = new UserModel();
+        BeanUtils.copyProperties(save, userModel);
         return userModel;
     }
 
@@ -80,6 +86,7 @@ public class UserServiceImpl implements UserService {
         UserInfo newUser = new UserInfo();
         BeanUtils.copyProperties(userModel, newUser);
         newUser.setCreateTime(userInfo.getCreateTime());
+        newUser.setUpdateTime(userInfo.getUpdateTime());
         userRepository.save(newUser);
         return userModel;
     }

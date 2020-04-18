@@ -17,5 +17,8 @@ public class Category {
     private Integer id;
 
     @Column(length = 50, nullable = false)
-    private String type;
+    private String typeName;
+
+    @Column(nullable = false, unique = true)
+    private Integer typeNumber;
 }

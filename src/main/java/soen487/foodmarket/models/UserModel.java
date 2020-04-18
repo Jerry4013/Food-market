@@ -20,7 +20,7 @@ public class UserModel {
     private String password;
 
     @NotNull(message = "name cannot be empty")
-    @Size(min=3, max=100, message = "The length of name must be 3-100")
+    @Size(min=2, max=100, message = "The length of name must be 2-100")
     private String name;
 
     @Email(message = "Email should be valid")

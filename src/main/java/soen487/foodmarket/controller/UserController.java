@@ -62,6 +62,10 @@ public class UserController {
 
     @PostMapping(value = "/infochange")
     public CommonReturnType changeInfo(@Valid @RequestBody UserModel userModel, BindingResult bindingResult) {
+        if (userModel.getId() == null) {
+            log.error("[User info change] user id must not be null, user={}", userModel );
+            throw new BusinessException(EmBusinessError.USER_ID_NULL);
+        }
         if (bindingResult.hasErrors()) {
             log.error("[User info change] New info invalid, user={}", userModel);
             if (bindingResult.getFieldError() == null) {
