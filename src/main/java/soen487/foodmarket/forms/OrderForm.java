@@ -1,13 +1,16 @@
 package soen487.foodmarket.forms;
 
 import lombok.Data;
+import soen487.foodmarket.dataobject.OrderItem;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class OrderForm {
 
-    @NotEmpty(message = "buyer Id cannot be empty")
+    @NotNull(message = "buyer Id cannot be empty")
     private Integer buyerId;
 
     @NotEmpty(message = "name cannot be empty")

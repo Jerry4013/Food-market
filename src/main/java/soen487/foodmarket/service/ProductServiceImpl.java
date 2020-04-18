@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import soen487.foodmarket.dataobject.Category;
 import soen487.foodmarket.dataobject.ProductInfo;
 import soen487.foodmarket.enums.ProductStatus;
@@ -78,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductModel createProduct(ProductModel productModel) {
         String productId = KeyUtil.genUniqueKey();
         ProductInfo byId = productRepository.findById(productId).orElse(null);
@@ -94,6 +96,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductModel updateProduct(ProductModel productModel) {
         ProductInfo byId = productRepository.findById(productModel.getProductId()).orElse(null);
         if (byId == null) {
@@ -135,6 +138,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductModel soldOut(String productId) {
         // TODO 不安全，所有人都可以改，应该加用户身份验证
         ProductInfo productInfo = productRepository.findById(productId).orElse(null);
@@ -154,6 +158,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductModel forSale(String productId) {
         // TODO 不安全，所有人都可以改，应该加用户身份验证
         ProductInfo productInfo = productRepository.findById(productId).orElse(null);
@@ -173,6 +178,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void increaseStock(List<Cart> cartList) {
         for (Cart cart : cartList) {
             ProductInfo productInfo = productRepository.findById(cart.getProductId()).orElse(null);
@@ -187,6 +193,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void decreaseStock(List<Cart> cartList) {
         for (Cart cart : cartList) {
             ProductInfo productInfo = productRepository.findById(cart.getProductId()).orElse(null);

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import soen487.foodmarket.dataobject.OrderItem;
 import soen487.foodmarket.dataobject.OrderMaster;
 import soen487.foodmarket.dataobject.ProductInfo;
@@ -46,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
         String orderMasterId = KeyUtil.genUniqueKey();
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
@@ -66,10 +68,10 @@ public class OrderServiceImpl implements OrderService {
         }
         OrderMaster orderMaster = new OrderMaster();
         orderDTO.setOrderId(orderMasterId);
+        orderDTO.setOrderAmount(orderAmount);
+        orderDTO.setOrderStatus(OrderStatus.NEW.getCode());
+        orderDTO.setPayStatus(PayStatus.WAIT.getCode());
         BeanUtils.copyProperties(orderDTO, orderMaster);
-        orderMaster.setOrderAmount(orderAmount);
-        orderMaster.setOrderStatus(OrderStatus.NEW.getCode());
-        orderMaster.setPayStatus(PayStatus.WAIT.getCode());
         orderMasterRepository.save(orderMaster);
 
         List<Cart> cartList = orderDTO.getOrderItemList().stream().map(e ->
@@ -86,16 +88,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO cancel(String orderId) {
         return null;
     }
 
     @Override
+    @Transactional
     public OrderDTO finish(String orderId) {
         return null;
     }
 
     @Override
+    @Transactional
     public OrderDTO pay(String orderId) {
         return null;
     }
