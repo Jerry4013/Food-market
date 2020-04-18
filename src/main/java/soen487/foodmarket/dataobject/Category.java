@@ -10,12 +10,15 @@ import javax.persistence.*;
 @DynamicInsert
 @DynamicUpdate
 @Data
-public class CategoryType {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(length = 50, nullable = false)
-    private String type;
+    private String typeName;
+
+    @Column(nullable = false, unique = true)
+    private Integer typeNumber;
 }

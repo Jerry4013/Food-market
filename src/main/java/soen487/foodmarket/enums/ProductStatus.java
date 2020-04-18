@@ -1,15 +1,15 @@
 package soen487.foodmarket.enums;
 
-public enum PayStatusEnum {
-    WAIT(0, "等待支付"),
-    SUCCESS(1, "支付成功")
+public enum  ProductStatus {
+    FOR_SALE(0, "在架"),
+    SOLD_OUT(1, "下架"),
     ;
 
     private Integer code;
 
     private String message;
 
-    PayStatusEnum(Integer code, String message) {
+    ProductStatus(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
