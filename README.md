@@ -131,17 +131,19 @@ POST: /user/infochange
 * 所有用户都能查看所有在售的商品
 * 加减库存
 #### 卖家
-* 新增商品
+* 新增商品 / 修改商品
 ```
-POST: /dish/new
+POST: /dish/management
+PUT: /dish/management
 {
   {
-      "username": "youareremovedfromthegroup"
-      "productName": "煎饼果子"
       "categoryType": "appitizer"
-      "price" : 5.98
-      "productImage": "http://baidu.com/jianbingguozi/1.png"
       "productDescription" : "巨大的煎饼果子,保证你吃饱!"
+      "productImage": "http://baidu.com/jianbingguozi/1.png"
+      "productName": "煎饼果子"
+      "productOwnerId": "youareremovedfromthegroup"
+      "productPrice" : 5.98
+      "productStock": 10
   }
 }
 
@@ -149,9 +151,174 @@ POST: /dish/new
     "status": "success",
     "data": [
         {
-            "name": "张三"
+          "categoryType": "appitizer"
+          "productDescription" : "巨大的煎饼果子,保证你吃饱!"
+          "productImage": "http://baidu.com/jianbingguozi/1.png"
+          "productName": "煎饼果子"
+          "productOwnerId": "youareremovedfromthegroup"
+          "productPrice" : 5.98
+          "productStock": 10
         }
     ]
 }
+```
+* 删除商品
+```
+DELETE: /dish/management
+param
+ "productId" : 1
+
+
+{
+    "status": "success",
+    "data": [
+        {
+          "productName": "煎饼果子"
+          "productOwnerId": "youareremovedfromthegroup"
+        }
+    ]
+}
+```
+* 本人全部商品
+```
+GET: /dish?id=youareremovedfromthegroup
+
+
+{
+    "status": "success",
+    "data": [
+        {
+          "productId" : 1
+          "categoryType": "appitizer"
+          "productDescription" : "巨大的煎饼果子,保证你吃饱!"
+          "productImage": "http://baidu.com/jianbingguozi/1.png"
+          "productName": "煎饼果子"
+          "productOwnerId": "youareremovedfromthegroup"
+          "productPrice" : 5.98
+          "productStock": 10
+        },
+        {
+          "productId" : 2
+          "categoryType": "mainDish"
+          "productDescription" : "正宗武汉热干面"
+          "productImage": "http://baidu.com/reganmian/1.png"
+          "productName": "热干面"
+          "productOwnerId": "youareremovedfromthegroup"
+          "productPrice" : 4.99
+          "productStock": 5
+        }
+    ]
+}
+```
+
+* 库存管理
+```
+POST: /dish/repositoryManagement
+
+  {
+      "productName": "煎饼果子"
+      "productOwnerId": "youareremovedfromthegroup"
+      "productStock": 8
+  }
+
+
+{
+    "status": "success",
+    "data": [
+        {
+          "productName": "煎饼果子"
+          "productOwnerId": "youareremovedfromthegroup"
+          "productStock": 8
+        }
+    ]
+}
+
+```
+
+#### 买家
+* 查看所有商品   
+```
+GET:  /dish/all
+ -- no body  
+
+{
+    "status": "success",
+    "data": [
+        {
+          "categoryType": "appitizer"
+          "productDescription" : "巨大的煎饼果子,保证你吃饱!"
+          "productImage": "http://baidu.com/jianbingguozi/1.png"
+          "productName": "煎饼果子"
+          "productOwnerId": "youareremovedfromthegroup"
+          "productPrice" : 5.98
+          "productStock": 10
+        },
+        {
+          "categoryType": "mainDish"
+          "productDescription" : "正宗武汉热干面"
+          "productImage": "http://baidu.com/reganmian/1.png"
+          "productName": "热干面"
+          "productOwnerId": "youareremovedfromthegroup"
+          "productPrice" : 4.99
+          "productStock": 5
+        }
+    ]
+}
+```
+
+### 订单模块
+* 结账下单
+```
+POST: transaction/
+{
+    "buyerId" : "asdfsadffas"
+    "buyerAddress" : "1322421 rue adsfljk ,QC"
+    "buyerPhone" : "5145424356"
+    "orderItems" : [
+        {
+            "productId" : 1
+            "quantity" : 1
+        },
+        {
+            "productId" : 2
+            "quantity" : 2
+        }
+    ]
+}
+
+{
+    "status": "success",
+    "data": [
+        {
+          "orderId" : 1
+        }
+    ]
+}
+```
+
+* 提示新订单
+```
+待定 
+
+```
+
+* 接单 / 完成
+
+((感觉这个有问题))
+```
+GET: /orderStatus?orderId=1&orderStatus=processing
+GET: /orderStatus?orderId=1&orderStatus=complete
+
+
+{
+    "status" : "success",
+    "data" : [
+         {
+            "orderId" : 1
+            "orderStatus" : "processing" / "complete"
+          }
+    ]
+}
+
 ```
 
