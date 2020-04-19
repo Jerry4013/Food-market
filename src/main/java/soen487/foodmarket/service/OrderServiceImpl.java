@@ -84,34 +84,110 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findOrdersByBuyerId(Integer buyerId) {
-        return null;
+        List<OrderMaster> orderMasterList = orderMasterRepository.findByBuyerId(buyerId);
+        List<String> orderIdList = orderMasterList.stream().map(OrderMaster::getOrderId).collect(Collectors.toList());
+        List<OrderItem> orderItemList = orderItemRepository.findAllByOrderIdIn(orderIdList);
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for (OrderMaster orderMaster : orderMasterList) {
+            OrderDTO orderDTO = new OrderDTO();
+            BeanUtils.copyProperties(orderMaster, orderDTO);
+            List<OrderItem> currentOrderItemList = new ArrayList<>();
+            for (OrderItem orderItem : orderItemList) {
+                if (orderItem.getOrderId().equals(orderMaster.getOrderId())) {
+                    currentOrderItemList.add(orderItem);
+                }
+            }
+            orderDTO.setOrderItemList(currentOrderItemList);
+            orderDTOList.add(orderDTO);
+        }
+        return orderDTOList;
     }
 
     @Override
     @Transactional
-    public OrderDTO cancel(String orderId) {
-        return null;
+    public OrderMaster cancelByBuyer(String orderId) {
+        OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
+        if (orderMaster == null) {
+            log.error("[cancel order] no such an order. orderId={}", orderId);
+            throw new BusinessException(EmBusinessError.ORDER_NOT_EXIST);
+        }
+        if (!orderMaster.getOrderStatus().equals(OrderStatus.NEW.getCode())) {
+            log.error("[cancel order]order cannot be cancelled with this status. orderId={}, orderStatus={}",
+                    orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            throw new BusinessException(EmBusinessError.ORDER_STATUS_ERROR);
+        }
+        orderMaster.setOrderStatus(OrderStatus.CANCEL.getCode());
+        if (orderMaster.getPayStatus().equals(PayStatus.SUCCESS.getCode())) {
+            // TODO refund
+            orderMaster.setPayStatus(PayStatus.WAIT.getCode());
+        }
+        orderMasterRepository.save(orderMaster);
+        // 返回库存
+        List<OrderItem> orderItemList = orderItemRepository.findByOrderId(orderId);
+        List<Cart> cartList = orderItemList.stream()
+                .map(orderItem -> new Cart(orderItem.getProductId(), orderItem.getQuantity()))
+                .collect(Collectors.toList());
+        productService.increaseStock(cartList);
+        return orderMaster;
     }
 
     @Override
     @Transactional
-    public OrderDTO finish(String orderId) {
-        return null;
+    public OrderMaster finish(String orderId) {
+        OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
+        if (orderMaster == null) {
+            log.error("[finish order] no such an order. orderId={}", orderId);
+            throw new BusinessException(EmBusinessError.ORDER_NOT_EXIST);
+        }
+        if (!orderMaster.getOrderStatus().equals(OrderStatus.NEW.getCode())) {
+            log.error("[finish order]order status error. orderId={}, orderStatus={}",
+                    orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            throw new BusinessException(EmBusinessError.ORDER_STATUS_ERROR);
+        }
+        if (!orderMaster.getPayStatus().equals(PayStatus.SUCCESS.getCode())) {
+            log.error("[finish order]order has not been paid. orderId={}, payStatus={}",
+                    orderMaster.getOrderId(), orderMaster.getPayStatus());
+            throw new BusinessException(EmBusinessError.PAY_STATUS_ERROR);
+        }
+        orderMaster.setOrderStatus(OrderStatus.FINISH.getCode());
+        orderMasterRepository.save(orderMaster);
+        return orderMaster;
     }
 
     @Override
     @Transactional
-    public OrderDTO pay(String orderId) {
-        return null;
+    public OrderMaster pay(String orderId) {
+        OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
+        if (orderMaster == null) {
+            log.error("[check out] no such an order. orderId={}", orderId);
+            throw new BusinessException(EmBusinessError.ORDER_NOT_EXIST);
+        }
+        if (!orderMaster.getOrderStatus().equals(OrderStatus.NEW.getCode())) {
+            log.error("[check out]order status error. orderId={}, orderStatus={}",
+                    orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            throw new BusinessException(EmBusinessError.ORDER_STATUS_ERROR);
+        }
+        if (!orderMaster.getPayStatus().equals(PayStatus.WAIT.getCode())) {
+            log.error("[check out]pay status error. orderId={}, payStatus={}",
+                    orderMaster.getOrderId(), orderMaster.getPayStatus());
+            throw new BusinessException(EmBusinessError.PAY_STATUS_ERROR);
+        }
+        orderMaster.setPayStatus(PayStatus.SUCCESS.getCode());
+        return orderMasterRepository.save(orderMaster);
     }
 
-    @Override
-    public List<OrderDTO> findOrdersBySellerId(Integer sellerId) {
-        return null;
-    }
 
     @Override
     public OrderDTO findByOrderId(String orderId) {
-        return null;
+        OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
+        if (orderMaster == null) {
+            log.error("[search order] no such an order. orderId={}", orderId);
+            throw new BusinessException(EmBusinessError.ORDER_NOT_EXIST);
+        }
+        List<OrderItem> orderItemList = orderItemRepository.findByOrderId(orderId);
+        OrderDTO orderDTO = new OrderDTO();
+        BeanUtils.copyProperties(orderMaster, orderDTO);
+        orderDTO.setOrderItemList(orderItemList);
+        return orderDTO;
     }
 }

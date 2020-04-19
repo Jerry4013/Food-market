@@ -25,10 +25,14 @@ public enum EmBusinessError implements CommonError {
     PRODUCT_NOT_EXIST(30002, "Product does not exist."),
     PRODUCT_STOCK_NEGATIVE(30003, "Stock cannot be negative"),
     PRODUCT_STATUS_ERROR(30004, "product status error"),
-    MEMBER_CANNOT_SAVE(30005, "Member can not be saved."),
 
     // 40000, category error
     CATEGORY_NOT_EXIST(40001, "Category does not exist."),
+
+    // 50000, order error
+    ORDER_NOT_EXIST(50001, "Order does not exist."),
+    ORDER_STATUS_ERROR(50002, "Order status error."),
+    PAY_STATUS_ERROR(50003, "Pay status error."),
     ;
 
 

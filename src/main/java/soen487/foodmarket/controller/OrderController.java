@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import soen487.foodmarket.dataobject.OrderItem;
+import soen487.foodmarket.dataobject.OrderMaster;
 import soen487.foodmarket.error.BusinessException;
 import soen487.foodmarket.error.EmBusinessError;
 import soen487.foodmarket.forms.OrderForm;
@@ -47,6 +45,36 @@ public class OrderController {
         }
         OrderDTO newOrderDTO = orderService.create(orderDTO);
         return CommonReturnType.create(newOrderDTO);
+    }
+
+    @GetMapping("/listByBuyer")
+    public CommonReturnType listByBuyer(@RequestParam Integer buyerId) {
+        List<OrderDTO> orderDTOList = orderService.findOrdersByBuyerId(buyerId);
+        return CommonReturnType.create(orderDTOList);
+    }
+
+    @PutMapping("/pay")
+    public CommonReturnType pay(@RequestParam String orderId) {
+        OrderMaster orderMaster = orderService.pay(orderId);
+        return CommonReturnType.create(orderMaster);
+    }
+
+    @GetMapping("/findByOrderId")
+    public CommonReturnType findByOrderId(@RequestParam String orderId) {
+        OrderDTO orderDTO = orderService.findByOrderId(orderId);
+        return CommonReturnType.create(orderDTO);
+    }
+
+    @PutMapping("/finish")
+    public CommonReturnType finish(@RequestParam String orderId) {
+        OrderMaster orderMaster = orderService.finish(orderId);
+        return CommonReturnType.create(orderMaster);
+    }
+
+    @PutMapping("/cancelledByBuyer")
+    public CommonReturnType cancelByBuyer(@RequestParam String orderId) {
+        OrderMaster orderMaster = orderService.cancelByBuyer(orderId);
+        return CommonReturnType.create(orderMaster);
     }
 
     private OrderDTO orderForm2OrderDTO(OrderForm orderForm) {
