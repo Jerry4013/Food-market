@@ -18,6 +18,8 @@ import soen487.foodmarket.repository.OrderItemRepository;
 import soen487.foodmarket.repository.OrderMasterRepository;
 import soen487.foodmarket.repository.ProductRepository;
 import soen487.foodmarket.utils.KeyUtil;
+import soen487.foodmarket.viewobjects.OrderItemVO;
+import soen487.foodmarket.viewobjects.OrderVO;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -83,24 +85,28 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findOrdersByBuyerId(Integer buyerId) {
+    public List<OrderVO> findOrdersByBuyerId(Integer buyerId) {
         List<OrderMaster> orderMasterList = orderMasterRepository.findByBuyerId(buyerId);
         List<String> orderIdList = orderMasterList.stream().map(OrderMaster::getOrderId).collect(Collectors.toList());
         List<OrderItem> orderItemList = orderItemRepository.findAllByOrderIdIn(orderIdList);
-        List<OrderDTO> orderDTOList = new ArrayList<>();
+        List<OrderVO> orderVOList = new ArrayList<>();
         for (OrderMaster orderMaster : orderMasterList) {
-            OrderDTO orderDTO = new OrderDTO();
-            BeanUtils.copyProperties(orderMaster, orderDTO);
-            List<OrderItem> currentOrderItemList = new ArrayList<>();
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(orderMaster, orderVO);
+            List<OrderItemVO> orderItemVOList = new ArrayList<>();
             for (OrderItem orderItem : orderItemList) {
                 if (orderItem.getOrderId().equals(orderMaster.getOrderId())) {
-                    currentOrderItemList.add(orderItem);
+                    OrderItemVO orderItemVO = new OrderItemVO();
+                    BeanUtils.copyProperties(orderItem, orderItemVO);
+                    productRepository.findById(orderItem.getProductId())
+                            .ifPresent(productInfo -> BeanUtils.copyProperties(productInfo, orderItemVO));
+                    orderItemVOList.add(orderItemVO);
                 }
             }
-            orderDTO.setOrderItemList(currentOrderItemList);
-            orderDTOList.add(orderDTO);
+            orderVO.setOrderItemVOList(orderItemVOList);
+            orderVOList.add(orderVO);
         }
-        return orderDTOList;
+        return orderVOList;
     }
 
     @Override

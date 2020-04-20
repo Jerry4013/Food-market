@@ -49,13 +49,9 @@ public class UserServiceImpl implements UserService {
 
     private UserInfo findUsernameAndCheckPassword(String username, String password) {
         UserInfo userInfo = userRepository.findByUsername(username);
-        if (userInfo == null) {
-            log.error("[login] User does not exist. username={}", username);
-            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
-        }
-        if (!userInfo.getPassword().equals(password)) {
+        if (userInfo == null || !userInfo.getPassword().equals(password)) {
             log.error("[login] password incorrect. password={}", password);
-            throw new BusinessException(EmBusinessError.PASSWORD_INCORRECT);
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
         return userInfo;
     }

@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@CrossOrigin(origins = {"*"}, allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;

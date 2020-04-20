@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/dish")
 @Slf4j
+@CrossOrigin(origins = {"*"}, allowCredentials = "true")
 public class ProductController {
 
     private final ProductService productService;

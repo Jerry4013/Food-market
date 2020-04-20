@@ -17,6 +17,7 @@ import soen487.foodmarket.models.CommonReturnType;
 import soen487.foodmarket.models.OrderDTO;
 import soen487.foodmarket.service.OrderService;
 import soen487.foodmarket.utils.ParamValidator;
+import soen487.foodmarket.viewobjects.OrderVO;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 @Slf4j
+@CrossOrigin(origins = {"*"}, allowCredentials = "true")
 public class OrderController {
 
     private final OrderService orderService;
@@ -49,8 +51,8 @@ public class OrderController {
 
     @GetMapping("/listByBuyer")
     public CommonReturnType listByBuyer(@RequestParam Integer buyerId) {
-        List<OrderDTO> orderDTOList = orderService.findOrdersByBuyerId(buyerId);
-        return CommonReturnType.create(orderDTOList);
+        List<OrderVO> orderVOList = orderService.findOrdersByBuyerId(buyerId);
+        return CommonReturnType.create(orderVOList);
     }
 
     @PutMapping("/pay")
