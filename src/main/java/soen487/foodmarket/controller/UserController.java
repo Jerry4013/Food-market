@@ -47,7 +47,7 @@ public class UserController {
         return CommonReturnType.create(userModel);
     }
 
-    @PostMapping(value = "/pwdchange")
+    @PutMapping(value = "/pwdchange")
     public CommonReturnType changePassword(@Valid @RequestBody ChangePassword changePassword, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("[Change password] user, changePassword={}", changePassword);
@@ -61,7 +61,7 @@ public class UserController {
         return CommonReturnType.create(userModel);
     }
 
-    @PostMapping(value = "/infochange")
+    @PutMapping(value = "/infochange")
     public CommonReturnType changeInfo(@Valid @RequestBody UserModel userModel, BindingResult bindingResult) {
         if (userModel.getId() == null) {
             log.error("[User info change] user id must not be null, user={}", userModel );
