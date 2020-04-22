@@ -8,4 +8,7 @@ import java.util.List;
 public interface OrderMasterRepository extends JpaRepository<OrderMaster, String> {
 
     List<OrderMaster> findByBuyerId(Integer buyerId);
+
+    List<OrderMaster> findAllByOrderIdIn(List<String> orderIdList);
+
 }

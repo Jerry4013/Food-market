@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    OrderDTO create(OrderDTO orderDTO);
+    OrderVO create(OrderDTO orderDTO);
 
     List<OrderVO> findOrdersByBuyerId(Integer buyerId);
 
@@ -19,5 +19,7 @@ public interface OrderService {
     OrderMaster pay(String orderId);
 
     OrderDTO findByOrderId(String orderId);
+
+    List<OrderVO> listByOwnerId(Integer ownerId);
 
 }

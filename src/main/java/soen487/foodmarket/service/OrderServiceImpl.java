@@ -50,10 +50,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDTO create(OrderDTO orderDTO) {
+    public OrderVO create(OrderDTO orderDTO) {
         String orderMasterId = KeyUtil.genUniqueKey();
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
-        List<OrderItem> orderItemList = new ArrayList<>();
+        List<OrderItemVO> orderItemVOList = new ArrayList<>();
         for (OrderItem orderItem : orderDTO.getOrderItemList()) {
             ProductInfo productInfo = productRepository.findById(orderItem.getProductId()).orElse(null);
             if (productInfo == null) {
@@ -66,7 +66,10 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setItemId(KeyUtil.genUniqueKey());
             orderItem.setOrderId(orderMasterId);
             OrderItem save = orderItemRepository.save(orderItem);
-            orderItemList.add(save);
+            OrderItemVO orderItemVO = new OrderItemVO();
+            BeanUtils.copyProperties(save, orderItemVO);
+            BeanUtils.copyProperties(productInfo, orderItemVO);
+            orderItemVOList.add(orderItemVO);
         }
         OrderMaster orderMaster = new OrderMaster();
         orderDTO.setOrderId(orderMasterId);
@@ -79,9 +82,10 @@ public class OrderServiceImpl implements OrderService {
         List<Cart> cartList = orderDTO.getOrderItemList().stream().map(e ->
                 new Cart(e.getProductId(), e.getQuantity())).collect(Collectors.toList());
         productService.decreaseStock(cartList);
-
-        orderDTO.setOrderItemList(orderItemList);
-        return orderDTO;
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orderDTO, orderVO);
+        orderVO.setOrderItemVOList(orderItemVOList);
+        return orderVO;
     }
 
     @Override
@@ -89,6 +93,34 @@ public class OrderServiceImpl implements OrderService {
         List<OrderMaster> orderMasterList = orderMasterRepository.findByBuyerId(buyerId);
         List<String> orderIdList = orderMasterList.stream().map(OrderMaster::getOrderId).collect(Collectors.toList());
         List<OrderItem> orderItemList = orderItemRepository.findAllByOrderIdIn(orderIdList);
+        List<OrderVO> orderVOList = new ArrayList<>();
+        for (OrderMaster orderMaster : orderMasterList) {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(orderMaster, orderVO);
+            List<OrderItemVO> orderItemVOList = new ArrayList<>();
+            for (OrderItem orderItem : orderItemList) {
+                if (orderItem.getOrderId().equals(orderMaster.getOrderId())) {
+                    OrderItemVO orderItemVO = new OrderItemVO();
+                    BeanUtils.copyProperties(orderItem, orderItemVO);
+                    productRepository.findById(orderItem.getProductId())
+                            .ifPresent(productInfo -> BeanUtils.copyProperties(productInfo, orderItemVO));
+                    orderItemVOList.add(orderItemVO);
+                }
+            }
+            orderVO.setOrderItemVOList(orderItemVOList);
+            orderVOList.add(orderVO);
+        }
+        return orderVOList;
+    }
+
+    @Override
+    public List<OrderVO> listByOwnerId(Integer ownerId) {
+        List<ProductInfo> productInfoList = productRepository.findAllByProductOwnerId(ownerId);
+        List<String> productIdList = productInfoList.stream().
+                map(ProductInfo::getProductId).collect(Collectors.toList());
+        List<OrderItem> orderItemList = orderItemRepository.findAllByProductIdIn(productIdList);
+        List<String> orderIdList = orderItemList.stream().map(OrderItem::getOrderId).collect(Collectors.toList());
+        List<OrderMaster> orderMasterList = orderMasterRepository.findAllByOrderIdIn(orderIdList);
         List<OrderVO> orderVOList = new ArrayList<>();
         for (OrderMaster orderMaster : orderMasterList) {
             OrderVO orderVO = new OrderVO();
@@ -196,4 +228,5 @@ public class OrderServiceImpl implements OrderService {
         orderDTO.setOrderItemList(orderItemList);
         return orderDTO;
     }
+
 }

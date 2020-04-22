@@ -10,6 +10,7 @@ import soen487.foodmarket.error.EmBusinessError;
 import soen487.foodmarket.models.ChangePassword;
 import soen487.foodmarket.models.CommonReturnType;
 import soen487.foodmarket.models.UserModel;
+import soen487.foodmarket.service.EmailSender;
 import soen487.foodmarket.service.UserService;
 
 import javax.validation.Valid;
@@ -22,9 +23,18 @@ public class UserController {
 
     private final UserService userService;
 
+    private final EmailSender emailSender;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EmailSender emailSender) {
         this.userService = userService;
+        this.emailSender = emailSender;
+    }
+
+    @GetMapping(value = "/mail")
+    public CommonReturnType test() {
+        emailSender.sendSimpleMail("jingchao.zhang@mail.concordia.ca", "Food Market", "test");
+        return CommonReturnType.create(null);
     }
 
     @PostMapping(value = "/new")

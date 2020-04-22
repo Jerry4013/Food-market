@@ -210,4 +210,16 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(productInfo);
         }
     }
+
+    @Override
+    public ProductModel findById(String productId) {
+        ProductInfo productInfo = productRepository.findById(productId).orElse(null);
+        if (productInfo == null) {
+            log.error("[Find Product] Product does not exist. productId={}", productId);
+            throw new BusinessException(EmBusinessError.PRODUCT_NOT_EXIST);
+        }
+        ProductModel productModel = new ProductModel();
+        BeanUtils.copyProperties(productInfo, productModel);
+        return productModel;
+    }
 }

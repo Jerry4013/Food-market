@@ -23,4 +23,6 @@ public interface ProductService {
     void increaseStock(List<Cart> cartList);
 
     void decreaseStock(List<Cart> cartList);
+
+    ProductModel findById(String productId);
 }

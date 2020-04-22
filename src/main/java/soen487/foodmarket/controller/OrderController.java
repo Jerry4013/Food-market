@@ -45,13 +45,19 @@ public class OrderController {
             log.error("[create order] cart cannot be empty.");
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
-        OrderDTO newOrderDTO = orderService.create(orderDTO);
-        return CommonReturnType.create(newOrderDTO);
+        OrderVO orderVO = orderService.create(orderDTO);
+        return CommonReturnType.create(orderVO);
     }
 
     @GetMapping("/listByBuyer")
     public CommonReturnType listByBuyer(@RequestParam Integer buyerId) {
         List<OrderVO> orderVOList = orderService.findOrdersByBuyerId(buyerId);
+        return CommonReturnType.create(orderVOList);
+    }
+
+    @GetMapping("/listByOwner")
+    public CommonReturnType listByOwnerId(@RequestParam Integer ownerId) {
+        List<OrderVO> orderVOList = orderService.listByOwnerId(ownerId);
         return CommonReturnType.create(orderVOList);
     }
 

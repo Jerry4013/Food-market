@@ -26,6 +26,12 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @GetMapping
+    public CommonReturnType findById(@RequestParam String productId) {
+        ProductModel productModel = productService.findById(productId);
+        return CommonReturnType.create(productModel);
+    }
+
     @GetMapping("/all")
     public CommonReturnType listAllForSale() { // 分类列出所有在售商品
         List<ProductCategoryVo> productCategoryVoList = productService.listAllForSale();
