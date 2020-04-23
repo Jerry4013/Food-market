@@ -15,8 +15,8 @@ public class UserModel {
     @Size(min=3, max=50, message = "The length of username must be 3-50")
     private String username;
 
-    @NotNull(message = "username cannot be empty")
-    @Size(min=6, max=50, message = "The length of username must be 6-50")
+    @NotNull(message = "password cannot be empty")
+    @Size(min=6, max=50, message = "The length of password must be 6-50")
     private String password;
 
     @NotNull(message = "name cannot be empty")
