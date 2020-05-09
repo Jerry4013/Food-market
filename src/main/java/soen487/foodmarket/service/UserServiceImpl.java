@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import soen487.foodmarket.dataobject.UserInfo;
 import soen487.foodmarket.error.BusinessException;
 import soen487.foodmarket.error.EmBusinessError;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserModel createUser(UserModel userModel) {
         UserInfo byUsername = userRepository.findByUsername(userModel.getUsername());
         if (byUsername != null) {
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserModel login(String username, String password) {
         UserInfo userInfo = findUsernameAndCheckPassword(username, password);
         UserModel userModel = new UserModel();
@@ -57,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserModel changePassword(ChangePassword changePassword) {
         UserInfo userInfo = findUsernameAndCheckPassword(changePassword.getUsername(),
                 changePassword.getPassword());
@@ -68,6 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserModel changeInfo(UserModel userModel) {
         UserInfo userInfo = userRepository.findById(userModel.getId()).orElse(null);
         if (userInfo == null) {

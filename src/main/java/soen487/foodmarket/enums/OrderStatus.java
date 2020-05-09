@@ -8,18 +8,18 @@ public enum OrderStatus {
 
     private Integer code;
 
-    private String massage;
+    private String message;
 
-    OrderStatus(Integer code, String massage) {
+    OrderStatus(Integer code, String message) {
         this.code = code;
-        this.massage = massage;
+        this.message = message;
     }
 
     public Integer getCode() {
         return code;
     }
 
-    public String getMassage() {
-        return massage;
+    public String getMessage() {
+        return message;
     }
 }
